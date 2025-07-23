@@ -5,15 +5,15 @@
 #include <time.h>
 #include "cache.h"
 
-#define MAX_SIZE 200*(1<<20)           // 200 MB
-#define MAX_ELEMENT_SIZE 10*(1<<20)    // 10 MB
+#define MAX_SIZE 200*(1<<20)           
+#define MAX_ELEMENT_SIZE 10*(1<<20)    
 
-// Static cache variables
+
 static cache_element* head = NULL;
 static int cache_size = 0;
 static pthread_mutex_t lock;
 
-// Initialize cache structures
+
 void init_cache() {
     pthread_mutex_init(&lock, NULL);
     head = NULL;
@@ -28,7 +28,7 @@ cache_element* find(char* url) {
         site = head;
         while (site != NULL) {
             if (strcmp(site->url, url) == 0) {
-                site->lru_time_track = time(NULL); // Update LRU
+                site->lru_time_track = time(NULL); 
                 break;
             }
             site = site->next;
@@ -47,7 +47,7 @@ void remove_cache_element() {
         cache_element *q = head;
         cache_element *oldest = head;
 
-        // Find LRU element
+        
         while (q->next != NULL) {
             if (q->next->lru_time_track < oldest->lru_time_track) {
                 oldest = q->next;
@@ -80,7 +80,7 @@ int add_cache_element(char* data, int size, char* url) {
         return 0;
     }
 
-    // Evict elements until space is available
+    
     while (cache_size + element_size > MAX_SIZE) {
         remove_cache_element();
     }
